@@ -1,0 +1,28 @@
+                                                                    
+   teseting.py                                                         
+   rm -r testing.py                                                       
+    git init                                                               
+   ls                                                                     
+   git init                                                               git remote add origin https://github.com/sonusid786/github-for-devops-workshop.git                                                     
+   clear                                                                  
+   git status                                                             
+   dir                                                                    
+   ls                                                                     
+   clear                                                                  
+   ls                                                                     
+                                                                                                                                                                                                             
+   git add testing.py                                                     
+   git status                                                             
+   (use "git rm --cached <file>..." to unstage)                           
+   clear                                                                  
+   git status                                                             
+   git commit -m "added testing files"                                    
+   git status                                                             
+   rm testing.py                                                          
+   ls                                                                     
+   git status                                                             
+   git restor testing.py                                                                                                                                                                                                                                               
+  git restore testing.py                                                 
+   ls                                                                     
+  get-history                                                            
+                                                              
