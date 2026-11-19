@@ -1,1 +1,49 @@
+name: Deploy portfolio to AWS S3
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+# GitHub OIDC: no long-lived AWS access keys are stored in GitHub.
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy static website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Validate website files
+        run: |
+          test -f index.html
+          test -f styles.css
+          test -f script.js
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync . s3://${{ vars.S3_BUCKET_NAME }} \
+            --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude "README.md"
+
+      # Optional: create a GitHub repository variable CLOUDFRONT_DISTRIBUTION_ID
+      # only if you use CloudFront in front of the S3 bucket.
+      - name: Invalidate CloudFront cache (optional)
+        if: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID != '' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/*"
 
